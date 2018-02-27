@@ -1,0 +1,62 @@
+Version 0.4.7 (kenan.gillet)
+  * fix make check after make clean
+  * fix rebar dialyzer check
+
+Version 0.4.6 (molinaro)
+  * typo was maybe leading to the old erlang template being used sometimes
+
+Version 0.4.5 (molinaro)
+  * ignore .dialyzer_ok and make sure it's removed by maintainer-clean
+
+Version 0.4.4 (molinaro)
+  * git ignore was messed up
+
+Version 0.4.3 (molinaro)
+  * make dialyzer failing break builds
+
+Version 0.4.2 (molinaro)
+  * fixes for erlang 18
+
+Version 0.4.1 (molinaro)
+  * fixes for Centos7
+
+Version 0.4.0 (molinaro)
+  * better way to ignore deps is with a rebar.config.script
+
+Version 0.3.3 (molinaro)
+  * dependency on rebar back and I believe appropriately set
+
+Version 0.3.2 (molinaro)
+  * hard dependency on rebar is not working at the moment, so removing it
+
+Version 0.3.1 (molinaro)
+  * build deps seem off
+
+Version 0.3.0 (molinaro)
+  * recursively add priv and c_src directories
+  * remove ebin directory during make maintainer-clean
+
+Version 0.2.0 (molinaro)
+  * check escripts to remove warning
+  * actually include rebar as a dependency
+
+Version 0.1.1 (molinaro)
+  * track a fix from fw-template-erlang for debian systems
+
+Version 0.1.0 (molinaro)
+  * add dialyzer support to make check when rebar doesn't support dialyzer
+
+Version 0.0.2 (molinaro)
+  * add maintainer-clean which removes all symlinks and the origin checkout
+  * better checks before building .app file
+  * NO_DIALZYER and NO_EUNIT now control whether to turn off dialyzer or eunit
+    with make check (these can be set to anything in the Makefile.am.local in
+    the root of a project).
+
+Version 0.0.1 (molinaro)
+  * copy c_src verbatim, sometimes there's depth there
+  * allow dialyzer to be skipped
+
+Version 0.0.0 (molinaro)
+  * initial version, works for some things, not others, but at least it mostly
+  works

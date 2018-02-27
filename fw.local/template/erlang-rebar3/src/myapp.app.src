@@ -1,0 +1,16 @@
+{ application, myapp,
+  [ { description, "An OTP Library" },
+    { vsn, "0.1.0" },
+    { registered, [] },
+    { applications,
+      [ kernel,
+        stdlib
+      ]},
+    { env, [] },
+    { modules, [] },
+
+    { maintainers, [] },
+    { licenses, ["Proprietary"] },
+    { links, [] }
+  ]
+}.

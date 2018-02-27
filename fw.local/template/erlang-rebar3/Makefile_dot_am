@@ -1,0 +1,67 @@
+include $(top_srcdir)/fw/build/automake/Makefile_dot_am
+
+REBAR_OPTS=
+erlappdir="@ERLAPPDIR@"
+erlappcsrcdir="$(erlappdir)"
+erlappsrcdir="$(erlappdir)/src"
+erlappebindir="$(erlappdir)/ebin"
+erlappprivdir="$(erlappdir)"
+erlappincludedir="$(erlappdir)/include"
+erlapptestdir="$(erlappdir)/test"
+erldocdir="@ERLDOCDIR@"
+
+dist_erlappsrc_DATA = $(wildcard src/*.erl) $(wildcard src/*.hrl)
+dist_erlappebin_DATA = $(wildcard _build/default/lib/@FW_ERL_APP_NAME@/ebin/*)
+nobase_dist_erlappinclude_DATA = $(shell if test -d include -o -h include ; then find include -follow -type f ; fi)
+nobase_dist_erlappcsrc_DATA = $(shell if test -d c_src -o -h c_src ; then find c_src -follow -type f ; fi)
+nobase_dist_erlapppriv_DATA = $(shell if test -d priv -o -h priv ; then find priv -follow -type f ; fi)
+
+DIALYZERFLAGS := -I include/ $(FW_DIALYZERFLAGS) 
+
+rebar3:
+	@ln -sf $(REBAR3) rebar3
+
+all: rebar3
+	FW_REBAR_BUILD=1 ./rebar3 $(REBAR_OPTS) compile
+
+check: rebar3
+	@if test -z "$(NO_DIALYZE)" ; then \
+	  FW_REBAR_BUILD=1 ./rebar3 $(REBAR_OPTS) dialyzer ; \
+	fi
+	@if test -z "$(NO_EUNIT)" ; then \
+	  FW_REBAR_BUILD=1 ./rebar3 $(REBAR_OPTS) eunit ; \
+	fi
+
+clean: rebar3
+	@rm -f .dialyzer_ok
+	FW_REBAR_BUILD=1 ./rebar3 $(REBAR_OPTS) clean
+
+EXTRA_DIST += \
+  $(dist_erlappinclude_DATA) \
+  $(dist_erlappsrc_DATA) \
+  $(dist_erlappcsrc_DATA) \
+  $(dist_erlappebin_DATA) \
+  rebar3 \
+  rebar.config \
+  rebar.config.script
+
+if FW_ERLANG_WANT_ERLRC
+install-data-hook::
+	mkdir -p "${DESTDIR}@ERLRCDIR@/applications"
+	touch "${DESTDIR}@ERLRCDIR@/applications/@FW_ERL_APP_NAME@"
+else
+install-data-hook::
+
+endif
+
+maintainer-clean-local::
+	FW_REBAR_BUILD=1 ./rebar3 $(REBAR_OPTS) clean
+	@rm -f .dialyzer_ok
+	@rm -rf _build
+	if test -n "$(FW_WRAP_GITNAME)" ; then rm -rf $(FW_WRAP_GITNAME) ; fi
+	for f in ebin include priv rebar3 rebar.config rebar.config.script c_src src test ; do \
+	  if test -L $$f ; then \
+	    rm -f $$f ; \
+	  fi ; \
+	done
+	@if test -d ebin ; then rm -rf ebin ; fi
